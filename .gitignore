@@ -1,14 +1,38 @@
+# Defaults from Android Studio
+
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+
+
+
+
+# ------------------------------
+
+
 # Ignore all by default
-*
+#/*
 
-# Base dir
-!.gitignore
+# /
+#!.gitignore
+#!build.gradle
+#!settings.gradle
+#!gradlew
 
-#*.iml
-#.gradle
-#/local.properties
-#/.idea/workspace.xml
-#/.idea/libraries
-#.DS_Store
-#/build
-#/captures
+# .idea/
+#!.idea/
+
+# gradle/
+#!gradle/
+
+
+
+
+#!**/*.java
+#!**/*.java
+
