@@ -1,0 +1,14 @@
+# Ignore all by default
+*
+
+# Base dir
+!.gitignore
+
+#*.iml
+#.gradle
+#/local.properties
+#/.idea/workspace.xml
+#/.idea/libraries
+#.DS_Store
+#/build
+#/captures
