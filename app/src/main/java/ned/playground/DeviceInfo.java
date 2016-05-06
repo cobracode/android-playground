@@ -1,24 +1,42 @@
 package ned.playground;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 public class DeviceInfo extends AppCompatActivity {
     private static final String TAG = "DeviceInfo Activity";
+    private TextView txtStatus;
+    private IStatusBroadcaster logBroadcaster = new LogBroadcaster();
+    private IStatusBroadcaster textBroadcaster = new TextViewBroadcaster();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         Log.i(TAG, "Created");
+        logBroadcaster.broadcast("Created");
+        textBroadcaster.broadcast("Created");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_info);
+
+        mapXmlIds();
+        textBroadcaster.setTextView(txtStatus);
+
+        txtStatus.append("\nfinished creating!!!!!!!!!!!");
+        //txtStatus.setInputType(InputType.TYPE_NULL);
+    }
+
+    private void mapXmlIds() {
+        txtStatus = (TextView) findViewById(R.id.status_textView);
     }
 
     @Override
     protected void onRestart() {
         Log.i(TAG, "Restarting");
+        logBroadcaster.broadcast("Restarting");
+        textBroadcaster.broadcast("Restarting");
+
         super.onRestart();
     }
 
@@ -29,6 +47,8 @@ public class DeviceInfo extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.i(TAG, "Starting");
+        logBroadcaster.broadcast("Starting");
+        textBroadcaster.broadcast("Starting");
         super.onStart();
     }
 
@@ -44,59 +64,45 @@ public class DeviceInfo extends AppCompatActivity {
     @Override
     protected void onResume() {
         Log.i(TAG, "Resuming");
+        logBroadcaster.broadcast("Resuming");
+        textBroadcaster.broadcast("Resuming");
+
         super.onResume();
     }
 
     @Override
     protected void onStop() {
         Log.i(TAG, "Stopping");
+        logBroadcaster.broadcast("Stopping");
+        textBroadcaster.broadcast("Stopping");
+
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         Log.i(TAG, "Destroying");
+        logBroadcaster.broadcast("Destroying");
+        textBroadcaster.broadcast("Destroying");
+
         super.onDestroy();
     }
 
     @Override
     public void onContentChanged() {
         Log.i(TAG, "Content has changed");
+        logBroadcaster.broadcast("Content has changed");
+        textBroadcaster.broadcast("Content has changed");
+
         super.onContentChanged();
     }
 
     @Override
     protected void onPostResume() {
         Log.i(TAG, "Post Resuming");
-        super.onPostResume();
-    }
+        logBroadcaster.broadcast("Post Resuming");
+        textBroadcaster.broadcast("Post Resuming");
 
-    /**
-     * This method is called whenever the user chooses to navigate Up within your application's
-     * activity hierarchy from the action bar.
-     * <p/>
-     * <p>If a parent was specified in the manifest for this activity or an activity-alias to it,
-     * default Up navigation will be handled automatically. See
-     * {@link #getSupportParentActivityIntent()} for how to specify the parent. If any activity
-     * along the parent chain requires extra Intent arguments, the Activity subclass
-     * should override the method {@link #onPrepareSupportNavigateUpTaskStack(TaskStackBuilder)}
-     * to supply those arguments.</p>
-     * <p/>
-     * <p>See <a href="{@docRoot}guide/topics/fundamentals/tasks-and-back-stack.html">Tasks and
-     * Back Stack</a> from the developer guide and
-     * <a href="{@docRoot}design/patterns/navigation.html">Navigation</a> from the design guide
-     * for more information about navigating within your app.</p>
-     * <p/>
-     * <p>See the {@link TaskStackBuilder} class and the Activity methods
-     * {@link #getSupportParentActivityIntent()}, {@link #supportShouldUpRecreateTask(Intent)}, and
-     * {@link #supportNavigateUpTo(Intent)} for help implementing custom Up navigation.</p>
-     *
-     * @return true if Up navigation completed successfully and this Activity was finished,
-     * false otherwise.
-     */
-    @Override
-    public boolean onSupportNavigateUp() {
-        Log.i(TAG, "Support Navigation Up");
-        return super.onSupportNavigateUp();
+        super.onPostResume();
     }
 }
