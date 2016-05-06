@@ -2,29 +2,23 @@ package ned.playground;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 public class DeviceInfo extends AppCompatActivity {
     private static final String TAG = "DeviceInfo Activity";
     private TextView txtStatus;
-    private IStatusBroadcaster logBroadcaster = new LogBroadcaster();
-    private IStatusBroadcaster textBroadcaster = new TextViewBroadcaster();
+    private BroadcastManager broadcastManager = new BroadcastManager();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        Log.i(TAG, "Created");
-        logBroadcaster.broadcast("Created");
-        textBroadcaster.broadcast("Created");
+        broadcastManager.addBroadcaster(new LogBroadcaster(TAG));
+        broadcastManager.broadcast("Created");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_info);
 
         mapXmlIds();
-        textBroadcaster.setTextView(txtStatus);
-
-        txtStatus.append("\nfinished creating!!!!!!!!!!!");
-        //txtStatus.setInputType(InputType.TYPE_NULL);
+        broadcastManager.addBroadcaster(new TextViewBroadcaster(txtStatus));
     }
 
     private void mapXmlIds() {
@@ -33,10 +27,7 @@ public class DeviceInfo extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        Log.i(TAG, "Restarting");
-        logBroadcaster.broadcast("Restarting");
-        textBroadcaster.broadcast("Restarting");
-
+        broadcastManager.broadcast("Restarting");
         super.onRestart();
     }
 
@@ -46,9 +37,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        Log.i(TAG, "Starting");
-        logBroadcaster.broadcast("Starting");
-        textBroadcaster.broadcast("Starting");
+        broadcastManager.broadcast("Starting");
         super.onStart();
     }
 
@@ -63,46 +52,31 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        Log.i(TAG, "Resuming");
-        logBroadcaster.broadcast("Resuming");
-        textBroadcaster.broadcast("Resuming");
-
+        broadcastManager.broadcast("Resuming");
         super.onResume();
     }
 
     @Override
     protected void onStop() {
-        Log.i(TAG, "Stopping");
-        logBroadcaster.broadcast("Stopping");
-        textBroadcaster.broadcast("Stopping");
-
+        broadcastManager.broadcast("Stopping");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "Destroying");
-        logBroadcaster.broadcast("Destroying");
-        textBroadcaster.broadcast("Destroying");
-
+        broadcastManager.broadcast("Destroying");
         super.onDestroy();
     }
 
     @Override
     public void onContentChanged() {
-        Log.i(TAG, "Content has changed");
-        logBroadcaster.broadcast("Content has changed");
-        textBroadcaster.broadcast("Content has changed");
-
+        broadcastManager.broadcast("Content has changed");
         super.onContentChanged();
     }
 
     @Override
     protected void onPostResume() {
-        Log.i(TAG, "Post Resuming");
-        logBroadcaster.broadcast("Post Resuming");
-        textBroadcaster.broadcast("Post Resuming");
-
+        broadcastManager.broadcast("Post Resuming");
         super.onPostResume();
     }
 }

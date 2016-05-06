@@ -18,16 +18,12 @@ public class TextViewBroadcaster implements IStatusBroadcaster {
         this.view = view;
     }
 
-    public void setTextView(final TextView view) {
-        this.view = view;
-    }
-
     @Override
     public boolean broadcast(final String message) {
         boolean result = false;
 
         if (null != view) {
-            view.append(message);
+            view.append(message + "\n");
             result = true;
         } else {
             Log.w(TAG, "null TextView; cannot broadcast message: " + message);
