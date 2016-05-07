@@ -8,6 +8,7 @@ public class DeviceInfo extends AppCompatActivity {
     private static final String TAG = "DeviceInfo Activity";
     private TextView txtStatus;
     private BroadcastManager broadcastManager = new BroadcastManager();
+    private Voice voice;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -18,11 +19,21 @@ public class DeviceInfo extends AppCompatActivity {
         setContentView(R.layout.activity_device_info);
 
         mapXmlIds();
+
+
+        // Activity is now initialized. Do stuff
+
         broadcastManager.addBroadcaster(new TextViewBroadcaster(txtStatus));
+        voice = new Voice(getApplicationContext(), broadcastManager);
     }
 
     private void mapXmlIds() {
         txtStatus = (TextView) findViewById(R.id.status_textView);
+        broadcastManager.broadcast("XML IDs mapped");
+    }
+
+    BroadcastManager getBroadcastManager() {
+        return broadcastManager;
     }
 
     @Override
@@ -59,6 +70,7 @@ public class DeviceInfo extends AppCompatActivity {
     @Override
     protected void onStop() {
         broadcastManager.broadcast("Stopping");
+        voice.stop();
         super.onStop();
     }
 
