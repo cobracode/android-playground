@@ -5,6 +5,6 @@ package ned.playground;
  */
 public interface IStatusBroadcaster {
 
-    public boolean broadcast(final String message);
+    boolean broadcast(final String message);
 
 }

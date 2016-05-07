@@ -2,57 +2,63 @@ package ned.playground;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 public class DeviceInfo extends AppCompatActivity {
     private static final String TAG = "DeviceInfo Activity";
+
     private TextView txtStatus;
     private BroadcastManager broadcastManager = new BroadcastManager();
-    private Voice voice;
 
+    /**
+     * Creating/initialize app resources
+     * at the start of the Activity lifecycle
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        broadcastManager.addBroadcaster(new LogBroadcaster(TAG));
-        broadcastManager.broadcast("Created");
-
+        Log.i(TAG, "Creating");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_info);
 
-        mapXmlIds();
-
-
-        // Activity is now initialized. Do stuff
-
-        broadcastManager.addBroadcaster(new TextViewBroadcaster(txtStatus));
-        voice = new Voice(getApplicationContext(), broadcastManager);
+        initResources();
     }
 
-    private void mapXmlIds() {
-        txtStatus = (TextView) findViewById(R.id.status_textView);
-        broadcastManager.broadcast("XML IDs mapped");
-    }
 
-    BroadcastManager getBroadcastManager() {
-        return broadcastManager;
-    }
-
+    /**
+     * Called after onStop() when user navigates back to Activity
+     */
     @Override
     protected void onRestart() {
-        broadcastManager.broadcast("Restarting");
+        Log.i(TAG, "Restarting");
         super.onRestart();
     }
 
+
     /**
+     * Called after onCreate() and onRestart()
+     *
      * Dispatch onStart() to all fragments.  Ensure any created loaders are
      * now started.
      */
     @Override
     protected void onStart() {
-        broadcastManager.broadcast("Starting");
+        Log.i(TAG, "Starting");
         super.onStart();
     }
 
+
+
+    private void mapXmlIds() {
+        txtStatus = (TextView) findViewById(R.id.status_textView);
+        Log.i(TAG, "XML IDs mapped");
+    }
+
+
     /**
+     * Called after onStart()
+     *
      * Dispatch onResume() to fragments.  Note that for better inter-operation
      * with older versions of the platform, at the point of this call the
      * fragments attached to the activity are <em>not</em> resumed.  This means
@@ -63,32 +69,84 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        broadcastManager.broadcast("Resuming");
+        Log.i(TAG, "Resuming");
+        GlobalVoice.getInstance(getApplicationContext()).say("Resuming activity");
         super.onResume();
     }
 
+
+    /**
+     * Called after onResume()
+     */
+    @Override
+    protected void onPostResume() {
+        Log.i(TAG, "Post Resuming");
+        super.onPostResume();
+    }
+
+    /**
+     * Called when Activity loses foreground focus
+     *
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        Log.i(TAG, "Pausing");
+        super.onPause();
+    }
+
+    /**
+     * Called when Activity is no longer visible on screen
+     * After onPause()
+     */
     @Override
     protected void onStop() {
-        broadcastManager.broadcast("Stopping");
-        voice.stop();
+        GlobalVoice.getInstance(getApplicationContext()).say("Stopping activity");
+        Log.i(TAG, "Stopping");
         super.onStop();
     }
 
+    /**
+     * Called at the very end of the Activity lifecycle.
+     * After onStop()
+     *
+     * Release resources here.
+     */
     @Override
     protected void onDestroy() {
-        broadcastManager.broadcast("Destroying");
+        Log.i(TAG, "Destroying Activity. This should be the final call, once.");
+        //globalVoice.close();
+        GlobalVoice.getInstance(getApplicationContext()).shutdownTts();
         super.onDestroy();
     }
 
     @Override
     public void onContentChanged() {
-        broadcastManager.broadcast("Content has changed");
+        Log.i(TAG, "Content has changed");
         super.onContentChanged();
     }
 
-    @Override
-    protected void onPostResume() {
-        broadcastManager.broadcast("Post Resuming");
-        super.onPostResume();
+    private void initResources() {
+        Log.i(TAG, "Initializing Activity resources");
+        mapXmlIds();
+
+        //globalVoice = GlobalVoice.getInstance(getApplicationContext());
+        getVoice().say("Activity has been initialized");
+
+//        // Activity is now initialized. Do stuff
+//        globalVoice = GlobalVoice.getInstance(getApplicationContext());
+//        broadcastManager.addBroadcaster(new LogBroadcaster(TAG));
+//
+//        broadcastManager.addBroadcaster(new TextViewBroadcaster(txtStatus));
+//        //globalVoice = new GlobalVoice(getApplicationContext(), broadcastManager);
+//        //GlobalVoice.getInstance(getApplicationContext()).say("hi there");
+//        //globalVoice.initialize();
+//        globalVoice.say("hey there ned man");
+//
+//        broadcastManager.broadcast("Created");
+    }
+
+    private GlobalVoice getVoice() {
+        return GlobalVoice.getInstance(getApplicationContext());
     }
 }

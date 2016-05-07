@@ -8,9 +8,9 @@ import android.util.Log;
 public class LogBroadcaster implements IStatusBroadcaster {
     private String TAG = "LogBroadcaster";
 
-    public LogBroadcaster(final String tag) {
-        TAG = tag;
-    }
+//    public LogBroadcaster(final String tag) {
+//        TAG = tag;
+//    }
 
     @Override
     public boolean broadcast(final String message) {
