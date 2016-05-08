@@ -1,5 +1,6 @@
 package ned.playground;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,7 +48,11 @@ public class DeviceInfo extends AppCompatActivity {
         super.onStart();
     }
 
-
+    @Override
+    public void onConfigurationChanged(final Configuration newConfig) {
+        Log.i(TAG, "Configuration changed: " + newConfig);
+        super.onConfigurationChanged(newConfig);
+    }
 
     private void mapXmlIds() {
         txtStatus = (TextView) findViewById(R.id.status_textView);
