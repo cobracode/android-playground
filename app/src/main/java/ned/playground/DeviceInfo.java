@@ -31,7 +31,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onRestart() {
-        getBroadcastManager().broadcast("Restarting activity");
+        status("Restarting activity");
         super.onRestart();
     }
 
@@ -44,13 +44,13 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        getBroadcastManager().broadcast("Starting activity");
+        status("Starting activity");
         super.onStart();
     }
 
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
-        getBroadcastManager().broadcast("Configuration changed: " + newConfig);
+        status("Configuration changed: " + newConfig);
         super.onConfigurationChanged(newConfig);
     }
 
@@ -73,7 +73,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        getBroadcastManager().broadcast("Resuming activity");
+        status("Resuming activity");
         super.onResume();
     }
 
@@ -83,7 +83,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        getBroadcastManager().broadcast("Post Resuming activity");
+        status("Post Resuming activity");
         super.onPostResume();
     }
 
@@ -94,7 +94,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        getBroadcastManager().broadcast("Pausing activity");
+        status("Pausing activity");
         super.onPause();
     }
 
@@ -104,7 +104,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        getBroadcastManager().broadcast("Stopping activity");
+        status("Stopping activity");
         super.onStop();
     }
 
@@ -116,7 +116,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        getBroadcastManager().broadcast("Destroying Activity");
+        status("Destroying Activity");
         getVoice().shutdownTts();
         getBroadcastManager().removeAll();
 
@@ -125,7 +125,7 @@ public class DeviceInfo extends AppCompatActivity {
 
     @Override
     public void onContentChanged() {
-        getBroadcastManager().broadcast("Activity content has changed");
+        status("Activity content has changed");
         super.onContentChanged();
     }
 
@@ -135,7 +135,7 @@ public class DeviceInfo extends AppCompatActivity {
 
         initBroadcasters();
 
-        getBroadcastManager().broadcast("Broadcasters have been initialized");
+        status("Broadcasters have been initialized");
     }
 
     private void initBroadcasters() {
@@ -151,5 +151,9 @@ public class DeviceInfo extends AppCompatActivity {
 
     private BroadcastManager getBroadcastManager() {
         return BroadcastManager.getInstance();
+    }
+
+    private void status(final String text) {
+        getBroadcastManager().broadcast(text);
     }
 }
