@@ -16,6 +16,8 @@
         android:text="&lt;Status>"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:inputType="none" />
+        android:inputType="none"
+        android:scrollbars="vertical"
+        android:gravity="bottom" />
 
 </RelativeLayout>

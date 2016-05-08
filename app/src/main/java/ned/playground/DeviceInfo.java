@@ -3,13 +3,19 @@ package ned.playground;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
 public class DeviceInfo extends AppCompatActivity {
     private static final String TAG = "DeviceInfo Activity";
 
+    // UI
     private TextView txtStatus;
+
+    // Data
+
+
 
     /**
      * Creating/initialize app resources
@@ -74,9 +80,9 @@ public class DeviceInfo extends AppCompatActivity {
     @Override
     protected void onResume() {
         status("Resuming activity");
+        //registerReceivers();
         super.onResume();
     }
-
 
     /**
      * Called after onResume()
@@ -95,6 +101,7 @@ public class DeviceInfo extends AppCompatActivity {
     @Override
     protected void onPause() {
         status("Pausing activity");
+        //unregisterReceivers();
         super.onPause();
     }
 
@@ -133,6 +140,9 @@ public class DeviceInfo extends AppCompatActivity {
         Log.i(TAG, "Initializing Activity resources");
         mapXmlIds();
 
+        // Enable scrolling for the text view
+        txtStatus.setMovementMethod(new ScrollingMovementMethod());
+
         initBroadcasters();
 
         status("Broadcasters have been initialized");
@@ -143,6 +153,16 @@ public class DeviceInfo extends AppCompatActivity {
         bm.addBroadcaster(new LogBroadcaster());
         bm.addBroadcaster(new TextViewBroadcaster(txtStatus));
         bm.addBroadcaster(new VoiceBroadcaster(getApplicationContext()));
+    }
+
+    private void registerReceivers() {
+        Log.d(TAG, "Registering BroadcastReceivers");
+        //registerReceiver(smsListener, IntentFilter.x);
+    }
+
+    private void unregisterReceivers() {
+        Log.d(TAG, "Unregistering BroadcastReceivers");
+        //unregisterReceiver(smsListener);
     }
 
     private GlobalVoice getVoice() {
