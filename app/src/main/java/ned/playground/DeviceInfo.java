@@ -31,7 +31,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onRestart() {
-        getBroadcastManager().broadcast("Restarting");
+        getBroadcastManager().broadcast("Restarting activity");
         super.onRestart();
     }
 
@@ -44,13 +44,13 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        Log.d(TAG, "Starting");
+        getBroadcastManager().broadcast("Starting activity");
         super.onStart();
     }
 
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
-        Log.i(TAG, "Configuration changed: " + newConfig);
+        getBroadcastManager().broadcast("Configuration changed: " + newConfig);
         super.onConfigurationChanged(newConfig);
     }
 
@@ -73,8 +73,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        Log.d(TAG, "Resuming");
-        getVoice().say("Resuming activity");
+        getBroadcastManager().broadcast("Resuming activity");
         super.onResume();
     }
 
@@ -84,7 +83,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        Log.d(TAG, "Post Resuming");
+        getBroadcastManager().broadcast("Post Resuming activity");
         super.onPostResume();
     }
 
@@ -95,7 +94,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        Log.d(TAG, "Pausing");
+        getBroadcastManager().broadcast("Pausing activity");
         super.onPause();
     }
 
@@ -105,8 +104,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        Log.d(TAG, "Stopping");
-        getVoice().say("Stopping activity");
+        getBroadcastManager().broadcast("Stopping activity");
         super.onStop();
     }
 
@@ -118,7 +116,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "Destroying Activity");
+        getBroadcastManager().broadcast("Destroying Activity");
         getVoice().shutdownTts();
         getBroadcastManager().removeAll();
 
@@ -127,7 +125,7 @@ public class DeviceInfo extends AppCompatActivity {
 
     @Override
     public void onContentChanged() {
-        Log.d(TAG, "Content has changed");
+        getBroadcastManager().broadcast("Activity content has changed");
         super.onContentChanged();
     }
 
