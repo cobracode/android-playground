@@ -26,7 +26,7 @@ public class TextViewBroadcaster implements IStatusBroadcaster {
         Log.d(TAG, "Appending to TextView: " + message);
 
         if (null != view) {
-            view.append(message + "\n");
+            view.append("\n" + message + "\n");
             result = true;
         } else {
             Log.w(TAG, "null TextView; cannot broadcast message: " + message);

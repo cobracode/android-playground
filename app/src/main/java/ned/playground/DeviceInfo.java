@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class DeviceInfo extends AppCompatActivity {
@@ -12,6 +14,7 @@ public class DeviceInfo extends AppCompatActivity {
 
     // UI
     private TextView txtStatus;
+    private Button clearButton;
 
     // Data
 
@@ -37,7 +40,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onRestart() {
-        status("Restarting activity");
+        Log.i(TAG, "Restarting activity");
         super.onRestart();
     }
 
@@ -50,7 +53,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        status("Starting activity");
+        Log.i(TAG, "Starting activity");
         super.onStart();
     }
 
@@ -58,11 +61,6 @@ public class DeviceInfo extends AppCompatActivity {
     public void onConfigurationChanged(final Configuration newConfig) {
         status("Configuration changed: " + newConfig);
         super.onConfigurationChanged(newConfig);
-    }
-
-    private void mapXmlIds() {
-        txtStatus = (TextView) findViewById(R.id.status_textView);
-        Log.d(TAG, "XML IDs mapped");
     }
 
 
@@ -89,7 +87,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        status("Post Resuming activity");
+        Log.i(TAG, "Post Resuming activity");
         super.onPostResume();
     }
 
@@ -111,7 +109,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        status("Stopping activity");
+        Log.i(TAG, "Stopping activity");
         super.onStop();
     }
 
@@ -155,6 +153,13 @@ public class DeviceInfo extends AppCompatActivity {
         bm.addBroadcaster(new VoiceBroadcaster(getApplicationContext()));
     }
 
+    private void mapXmlIds() {
+        txtStatus = (TextView) findViewById(R.id.status_textView);
+        clearButton = (Button) findViewById(R.id.clear_button);
+
+        Log.d(TAG, "XML IDs mapped");
+    }
+
     private void registerReceivers() {
         Log.d(TAG, "Registering BroadcastReceivers");
         //registerReceiver(smsListener, IntentFilter.x);
@@ -163,6 +168,10 @@ public class DeviceInfo extends AppCompatActivity {
     private void unregisterReceivers() {
         Log.d(TAG, "Unregistering BroadcastReceivers");
         //unregisterReceiver(smsListener);
+    }
+
+    public void clearTextView(final View view) {
+        txtStatus.setText("");
     }
 
     private GlobalVoice getVoice() {
