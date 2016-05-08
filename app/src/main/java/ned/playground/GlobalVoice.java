@@ -98,7 +98,9 @@ public class GlobalVoice implements TextToSpeech.OnInitListener {
         } else {
             final String msg = "Deactivating voice";
             Log.i(TAG, msg);
-            say(msg);
+
+            // Say now, interrupting any other messages
+            tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null, "");
 
             while (tts.isSpeaking()) {
                 SystemClock.sleep(250);
