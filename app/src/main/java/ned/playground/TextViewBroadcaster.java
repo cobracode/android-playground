@@ -11,16 +11,19 @@ public class TextViewBroadcaster implements IStatusBroadcaster {
     private TextView view;
 
     public TextViewBroadcaster() {
-
+        Log.v(TAG, "Creating");
     }
 
     public TextViewBroadcaster(final TextView view) {
+        Log.v(TAG, "Creating with TextView: " + view);
         this.view = view;
     }
 
     @Override
     public boolean broadcast(final String message) {
         boolean result = false;
+
+        Log.d(TAG, "Appending to TextView: " + message);
 
         if (null != view) {
             view.append(message + "\n");

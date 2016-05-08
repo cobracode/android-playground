@@ -9,7 +9,6 @@ public class DeviceInfo extends AppCompatActivity {
     private static final String TAG = "DeviceInfo Activity";
 
     private TextView txtStatus;
-    private BroadcastManager broadcastManager = new BroadcastManager();
 
     /**
      * Creating/initialize app resources
@@ -31,7 +30,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onRestart() {
-        Log.i(TAG, "Restarting");
+        getBroadcastManager().broadcast("Restarting");
         super.onRestart();
     }
 
@@ -44,7 +43,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        Log.i(TAG, "Starting");
+        Log.d(TAG, "Starting");
         super.onStart();
     }
 
@@ -52,7 +51,7 @@ public class DeviceInfo extends AppCompatActivity {
 
     private void mapXmlIds() {
         txtStatus = (TextView) findViewById(R.id.status_textView);
-        Log.i(TAG, "XML IDs mapped");
+        Log.d(TAG, "XML IDs mapped");
     }
 
 
@@ -69,8 +68,8 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        Log.i(TAG, "Resuming");
-        GlobalVoice.getInstance(getApplicationContext()).say("Resuming activity");
+        Log.d(TAG, "Resuming");
+        getVoice().say("Resuming activity");
         super.onResume();
     }
 
@@ -80,7 +79,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPostResume() {
-        Log.i(TAG, "Post Resuming");
+        Log.d(TAG, "Post Resuming");
         super.onPostResume();
     }
 
@@ -91,7 +90,7 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        Log.i(TAG, "Pausing");
+        Log.d(TAG, "Pausing");
         super.onPause();
     }
 
@@ -101,8 +100,8 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        GlobalVoice.getInstance(getApplicationContext()).say("Stopping activity");
-        Log.i(TAG, "Stopping");
+        Log.d(TAG, "Stopping");
+        getVoice().say("Stopping activity");
         super.onStop();
     }
 
@@ -114,15 +113,16 @@ public class DeviceInfo extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "Destroying Activity. This should be the final call, once.");
-        //globalVoice.close();
-        GlobalVoice.getInstance(getApplicationContext()).shutdownTts();
+        Log.d(TAG, "Destroying Activity");
+        getVoice().shutdownTts();
+        getBroadcastManager().removeAll();
+
         super.onDestroy();
     }
 
     @Override
     public void onContentChanged() {
-        Log.i(TAG, "Content has changed");
+        Log.d(TAG, "Content has changed");
         super.onContentChanged();
     }
 
@@ -130,23 +130,23 @@ public class DeviceInfo extends AppCompatActivity {
         Log.i(TAG, "Initializing Activity resources");
         mapXmlIds();
 
-        //globalVoice = GlobalVoice.getInstance(getApplicationContext());
-        getVoice().say("Activity has been initialized");
+        initBroadcasters();
 
-//        // Activity is now initialized. Do stuff
-//        globalVoice = GlobalVoice.getInstance(getApplicationContext());
-//        broadcastManager.addBroadcaster(new LogBroadcaster(TAG));
-//
-//        broadcastManager.addBroadcaster(new TextViewBroadcaster(txtStatus));
-//        //globalVoice = new GlobalVoice(getApplicationContext(), broadcastManager);
-//        //GlobalVoice.getInstance(getApplicationContext()).say("hi there");
-//        //globalVoice.initialize();
-//        globalVoice.say("hey there ned man");
-//
-//        broadcastManager.broadcast("Created");
+        getBroadcastManager().broadcast("Broadcasters have been initialized");
+    }
+
+    private void initBroadcasters() {
+        final BroadcastManager bm = getBroadcastManager();
+        bm.addBroadcaster(new LogBroadcaster());
+        bm.addBroadcaster(new TextViewBroadcaster(txtStatus));
+        bm.addBroadcaster(new VoiceBroadcaster(getApplicationContext()));
     }
 
     private GlobalVoice getVoice() {
         return GlobalVoice.getInstance(getApplicationContext());
+    }
+
+    private BroadcastManager getBroadcastManager() {
+        return BroadcastManager.getInstance();
     }
 }
