@@ -3,7 +3,8 @@ package ned.playground;
 import android.util.Log;
 import android.widget.TextView;
 
-import java.util.GregorianCalendar;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * Created by ned on 5/6/16.
@@ -11,6 +12,7 @@ import java.util.GregorianCalendar;
 public class TextViewBroadcaster implements IStatusBroadcaster {
     private static final String TAG = "TextViewBroadcaster";
     private TextView view;
+    static private final DateFormat dateFormatter = DateFormat.getTimeInstance();
 
     public TextViewBroadcaster() {
         Log.v(TAG, "Creating");
@@ -43,6 +45,6 @@ public class TextViewBroadcaster implements IStatusBroadcaster {
      * @return
      */
     private static String simpleTimestamp() {
-        return String.format("%1$tH:%1$tM", GregorianCalendar.getInstance());
+        return dateFormatter.format(new Date());
     }
 }
