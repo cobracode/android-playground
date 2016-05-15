@@ -136,6 +136,9 @@ public class DeviceInfo extends AppCompatActivity {
 
     private void initResources() {
         Log.i(TAG, "Initializing Activity resources");
+
+        AppContext.setAppContext(getApplicationContext());
+
         mapXmlIds();
 
         // Enable scrolling for the text view

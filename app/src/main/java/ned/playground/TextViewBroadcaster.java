@@ -12,7 +12,7 @@ import java.util.Date;
 public class TextViewBroadcaster implements IStatusBroadcaster {
     private static final String TAG = "TextViewBroadcaster";
     private TextView view;
-    static private final DateFormat dateFormatter = DateFormat.getTimeInstance();
+    private static final DateFormat dateFormatter = DateFormat.getTimeInstance();
 
     public TextViewBroadcaster() {
         Log.v(TAG, "Creating");

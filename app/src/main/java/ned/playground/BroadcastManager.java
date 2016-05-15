@@ -63,7 +63,7 @@ public class BroadcastManager {
     public void broadcast(final String message) {
         Log.v(TAG, "Broadcasting: " + message);
 
-        for (final IStatusBroadcaster broadcaster: broadcasters) {
+        for (final IStatusBroadcaster broadcaster : broadcasters) {
             broadcaster.broadcast(message);
         }
     }
