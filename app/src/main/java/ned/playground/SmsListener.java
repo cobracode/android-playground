@@ -18,6 +18,8 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
 
     private static final String listenIntent = Telephony.Sms.Intents.SMS_RECEIVED_ACTION;
 
+    private static List<Text> latestTexts;
+
     public SmsListener() {
     }
 
@@ -57,16 +59,16 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
      */
     private void processTexts(final Intent intent) {
         // Get list of texts
-        final List<Text> texts = getTexts(intent);
+        latestTexts = getTexts(intent);
 
         // Get unique phone numbers from texts
-        final Set<String> phoneNumbers = getPhoneNumbers(texts);
+        final Set<String> phoneNumbers = getPhoneNumbers(latestTexts);
 
         // Kick off the task to get the contact names
         ContactsUtil.getContactNames(phoneNumbers, this);
     }
 
-    private Set<String> getPhoneNumbers(final List<Text> texts) {
+    private static Set<String> getPhoneNumbers(final List<Text> texts) {
         final Set<String> numbers = new HashSet<String>();
 
         for (final Text text : texts) {
@@ -76,12 +78,16 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
         return numbers;
     }
 
-    private List<Text> getTexts(final Intent intent) {
+    private static List<Text> getTexts(final Intent intent) {
         List<Text> texts = new LinkedList<Text>();
 
         for (final SmsMessage message : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
             if (null != message) {
-                texts.add(new Text(message.getDisplayOriginatingAddress(), message.getDisplayOriginatingAddress()));
+                final String body = message.getDisplayMessageBody()
+                        .replaceAll("\\t", "")
+                        .replaceAll("\\n", "");
+
+                texts.add(new Text(message.getDisplayOriginatingAddress(), body));
             } else {
                 Log.d(TAG, "Skipping null SmsMessage");
             }
@@ -98,5 +104,31 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
     @Override
     public void receiveContactNames(final Map<String, String> contacts) {
         Log.d(TAG, "Received contacts: " + contacts);
+
+        // Set contact names in texts
+        updateTextContacts(contacts);
+
+        // Read 'em
+        readTexts();
+    }
+
+    private void updateTextContacts(final Map<String, String> contacts) {
+        for (final Text text : latestTexts) {
+            text.setName(contacts.get(text.getPhoneNumber()));
+        }
+    }
+
+    private void readTexts() {
+        final BroadcastManager bm = BroadcastManager.getInstance();
+
+        for (final Text text : latestTexts) {
+            String prefix = text.getName() + " says ";
+
+            if (text.getName().equals("Email")) {
+                prefix = "Email: ";
+            }
+
+            bm.broadcast(prefix + text.getMessage());
+        }
     }
 }

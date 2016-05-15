@@ -14,21 +14,25 @@ import java.util.Set;
  * Created by ned on 5/9/16.
  */
 public class ContactsUtil {
+    private static final String TAG = "ContactsUtil";
     private static final Map<String, String> contacts = new HashMap<String, String>();
 
 
     public static void getContactNames(final Set<String> contactNumbers, final ContactListener contactListener) {
         // Call ContactResolver to get the contact names
         // That will call ContactListener.receiveContactNames() with the results
-        BroadcastManager.getInstance().broadcast("Creating async task");
+        Log.d(TAG, "Creating async task to resolve contacts: " + contactNumbers);
         new ContactResolver(contactListener).execute(contactNumbers);
     }
 
     private static class ContactResolver extends AsyncTask<Set<String>, Void, Map<String, String>> {
         private static final String TAG = "ContactResolver";
         private ContactListener listener;
+        private String uid;
 
         public ContactResolver(final ContactListener listener) {
+            uid = ":" + this;
+            Log.v(TAG + uid, "Constructing task with ContactListener " + listener);
             this.listener = listener;
         }
 
@@ -45,9 +49,7 @@ public class ContactsUtil {
          */
         @Override
         protected void onPostExecute(final Map<String, String> resolvedContacts) {
-            BroadcastManager.getInstance().broadcast("Done executing. Result: " + resolvedContacts);
-            super.onPostExecute(resolvedContacts);
-
+            Log.d(TAG + uid, "Task finished. Result: " + resolvedContacts);
             listener.receiveContactNames(resolvedContacts);
         }
 
@@ -59,8 +61,7 @@ public class ContactsUtil {
          */
         @Override
         protected void onPreExecute() {
-            BroadcastManager.getInstance().broadcast("Pre-executing");
-            super.onPreExecute();
+            Log.d(TAG + uid, "Pre-executing task");
         }
 
         /**
@@ -79,48 +80,64 @@ public class ContactsUtil {
          */
         @Override
         protected Map<String, String> doInBackground(final Set<String>... numbers) {
-            BroadcastManager.getInstance().broadcast("Beginning execution with params: " + numbers);
+            Log.d(TAG + uid, "Beginning execution with params: " + numbers);
 
             final Map<String, String> resolvedContacts = new HashMap<String, String>();
 
-            for (final String number : numbers[0]) {
-                resolvedContacts.put(number, resolveContact(number));
+            if (0 < numbers.length) {
+                for (final String number : numbers[0]) {
+                    resolvedContacts.put(number, resolveContact(number));
+                }
             }
 
             return resolvedContacts;
         }
 
         private String resolveContact(final String number) {
+            Log.d(TAG + uid, "Resolving number: " + number);
+
             String name = "Someone";
 
             if (!number.isEmpty()) {
                 // Check if contact is already stored
                 if (contacts.containsKey(number)) {
                     name = contacts.get(number);
-                    Log.d(TAG, "getContactName(): name \"" + name + "\" found in contact map.");
+                    Log.i(TAG + uid, "Cached number " + number + " found in contact map: '" + name + "'");
                 } else {
-                    // Define the columns I want the query to return
-                    final String[] projection = new String[] { ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID };
+                    // Check for email address
+                    if (number.contains("@")) {
+                        name = "Email";
+                    } else {
+                        // Define the columns I want the query to return
+                        final String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
 
-                    // Encode the phone number and build the filter URI
-                    final Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+                        // Encode the phone number and build the filter URI
+                        final Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
 
-                    // Query for the URI
-                    final Cursor cursor = AppContext.get().getContentResolver().query(contactUri, projection, null, null, null);
+                        Log.d(TAG + uid, "Contact Lookup URI: " + contactUri);
 
-                    if (null != cursor) {
-                        if (cursor.moveToFirst()) {
-                            name = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                            Log.d(TAG, "getContactName(): " + number + " resolved to contact \"" + name + "\".");
+                        // Query for the URI
+                        final Cursor cursor = AppContext.get().getContentResolver().query(contactUri, projection, null, null, null);
+
+                        if (null != cursor) {
+                            if (cursor.moveToFirst()) {
+                                name = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                                Log.d(TAG + uid, number + " resolved to contact \"" + name + "\".");
+                            } else {
+                                Log.w(TAG + uid, "Contact not found for number " + number);
+                            }
+
+                            cursor.close();
+
                         } else {
-                            Log.w(TAG, "getContactName(): contact not found for number " + number + ".");
+                            Log.w(TAG + uid, "Cursor returned null for number " + number);
                         }
-
-                        cursor.close();
                     }
 
                     contacts.put(number, name);
                 }
+            } else {
+                Log.w(TAG + uid, "Skipping blank phone number");
             }
 
             return name;

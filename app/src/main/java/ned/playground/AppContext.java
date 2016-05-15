@@ -13,7 +13,10 @@ final class AppContext {
     }
 
     public static void setAppContext(final Context appContext) {
-        AppContext.appContext = appContext;
+        // Should only be set once
+        if (null == AppContext.appContext) {
+            AppContext.appContext = appContext;
+        }
     }
 
     public static Context get() {
