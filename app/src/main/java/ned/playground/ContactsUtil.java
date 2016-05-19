@@ -106,7 +106,7 @@ public class ContactsUtil {
                 } else {
                     // Check for email address
                     if (number.contains("@")) {
-                        name = "Email";
+                        name = number;
                     } else {
                         // Define the columns I want the query to return
                         final String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};

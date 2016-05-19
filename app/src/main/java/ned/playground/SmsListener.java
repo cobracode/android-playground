@@ -42,19 +42,7 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
 
 
     /**
-     *  texts come in
-         get the list of texts
-         #, text string
-
-
-         send the list of unique #s to ContactsUtil
-         when all are resolved, it will send a list of pairs <#, name> back
-
-
-         when get list of <#, name>,
-         associate them to their texts:
-         replace # with name in text, and push new string to broadcaster
-
+     *
      * @param intent
      */
     private void processTexts(final Intent intent) {
@@ -96,10 +84,6 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
         return texts;
     }
 
-//    @Override
-//    public void processContact(final String contactNumber, final String contactName) {
-//
-//    }
 
     @Override
     public void receiveContactNames(final Map<String, String> contacts) {
@@ -122,10 +106,11 @@ public class SmsListener extends BroadcastReceiver implements ContactListener {
         final BroadcastManager bm = BroadcastManager.getInstance();
 
         for (final Text text : latestTexts) {
-            String prefix = text.getName() + " says ";
+            final String name = text.getName();
+            String prefix = name + " says ";
 
-            if (text.getName().equals("Email")) {
-                prefix = "Email: ";
+            if (name.contains("@")) {
+                prefix = "Email from " + name + ": ";
             }
 
             bm.broadcast(prefix + text.getMessage());
